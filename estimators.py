@@ -30,8 +30,9 @@ def get_cosmo_BOSS():
 def estimate_correlation_function(path_data, path_randoms, path_result, nthreads=4, zcuts=None, downsample_randoms=10, recon=False):
     data = Table.read(path_data)
     randoms = Table.read(path_randoms)
+    P0 = 1e4
     for catalog in [data,randoms]:
-        catalog['WEIGHT_FKP'] = 1./(1. + catalog['NZ'])
+        catalog['WEIGHT_FKP'] = 1./(1. + catalog['NZ']*P0)
         catalog['WEIGHT'] = catalog['WEIGHT_SYSTOT']*catalog['WEIGHT_CP']*catalog['WEIGHT_NOZ']*catalog['WEIGHT_FKP']
     if zcuts is not None:
         data = data[(data['Z'] > zcuts[0]) & (data['Z'] < zcuts[1])]
@@ -76,8 +77,9 @@ def estimate_power_spectrum(path_data, path_randoms, path_result, zcuts=None, do
     data = FITSCatalog(path_data)
     randoms = FITSCatalog(path_randoms)
     cosmo = get_cosmo_BOSS()
+    P0 = 1e4
     for catalog in [data,randoms]:
-        catalog['WEIGHT_FKP'] = 1./(1. + catalog['NZ'])
+        catalog['WEIGHT_FKP'] = 1./(1. + catalog['NZ']*P0)
         catalog['WEIGHT_COMP'] = catalog['WEIGHT_SYSTOT']*catalog['WEIGHT_CP']*catalog['WEIGHT_NOZ']
         catalog['POSITION'] = SkyToCartesian(catalog['RA'],catalog['DEC'],catalog['Z'],cosmo=cosmo)
     if zcuts is not None:

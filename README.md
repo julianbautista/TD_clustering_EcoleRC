@@ -8,10 +8,8 @@ Catalogs: https://data.sdss.org/sas/dr16/eboss/lss/catalogs/DR16/
 
 ## Instructions
 
-1) Download catalogs :
-```
-python filepaths.py
-```
+1) Download catalogs
+
 2) Plot footprint : RA / DEC et Z distribution
 
 3) RA, DEC, Z to cartesian positions assuming a fiducial cosmology
