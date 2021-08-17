@@ -151,12 +151,12 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
     path_ref_covariance = [os.path.join(base_dir,bd) for bd in base_covariance]
 
     mkdir(base_dir)
-    """
+
     for bd,prd in zip(base_data + base_covariance,path_ref_data + path_ref_covariance):
         urld = os.path.join(url,bd)
         r = requests.get(urld,allow_redirects=True)
         with open(prd,'bw') as file: file.write(r.content)
-    """
+    
     coeffs = effective_area[tracer]
     coeffs = np.array(coeffs)/np.sum(coeffs)
 
