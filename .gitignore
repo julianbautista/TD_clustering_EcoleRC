@@ -12,10 +12,12 @@
 **/catalogs
 **/data
 **/results
-**/sims
 **/*.so
 **/*.mod
 **/*.npz
 **/.ipynb_checkpoints
 **/_autosummary
 **/cellar
+**/refs
+**/*make_sim_measurements*
+**/*answer*

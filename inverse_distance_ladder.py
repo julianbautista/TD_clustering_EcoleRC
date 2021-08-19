@@ -7,8 +7,8 @@ from cosmoprimo import Cosmology
 
 import likelihood_bao
 from likelihood_bao import BaseLikelihood, get_cosmo_BOSS, minimize, sample, plot_samples
-import filepaths
-from filepaths import Measurement
+import environment
+from environment import Measurement
 
 base_dir = './results'
 
@@ -79,7 +79,7 @@ class BAOLikelihood(BaseLikelihood):
         logprior = super(BAOLikelihood,self).logprior(args)
         d = self.list_to_dict(args)
         # Planck2018 TT lowE
-        logprior -= 1./2.*(d['rs_drag'] - 147.21)**2/0.48**2
+        logprior -= 1./2.*(d['rs_drag'] - 149.47)**2/0.48**2
         return logprior
 
     def plot(self, params, path_figure=None):
@@ -109,7 +109,7 @@ class BAOLikelihood(BaseLikelihood):
 
 if __name__ == '__main__':
 
-    filepaths.mkdir(base_dir)
+    environment.mkdir(base_dir)
 
     tracer = 'LRGpCMASS'
     iso = True
@@ -138,7 +138,7 @@ if __name__ == '__main__':
         likelihood.plot(x,path_figure=path_figure)
 
     if 'mcmc' in run:
-        samples = sample(likelihood,nsteps=2000,path_samples=path_samples)
+        samples = sample(likelihood,nsteps=1000,path_samples=path_samples)
         samples = np.load(path_samples)
         samples = samples[len(samples)//2:]
         x = np.median(samples,axis=0)

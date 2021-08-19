@@ -156,7 +156,7 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
         urld = os.path.join(url,bd)
         r = requests.get(urld,allow_redirects=True)
         with open(prd,'bw') as file: file.write(r.content)
-    
+
     coeffs = effective_area[tracer]
     coeffs = np.array(coeffs)/np.sum(coeffs)
 
@@ -226,6 +226,17 @@ def prune_catalogs(tracer='LRGpCMASS', cap='NGC', recon=False):
     print('Randoms size is {:d}'.format(len(catalog)))
     catalog.write(path_randoms,overwrite=True)
 
+
+def path_sim_measurement(space='power', tracer='LRGpCMASS', z=0.5, recon=False, base_dir='./sims/'):
+    if recon: recon = '_rec'
+    else: recon = ''
+    base = '{}_sim_{}{}_{:.2f}.npy'.format(space,tracer,recon,z)
+    return os.path.join(base_dir,base)
+
+
+def list_path_sim_measurement(**kwargs):
+    zeff = 0.1 + np.linspace(0.,1.8,10)
+    return [path_sim_measurement(z=z,**kwargs) for z in zeff]
 
 
 if __name__ == '__main__':

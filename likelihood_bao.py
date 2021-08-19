@@ -15,7 +15,8 @@ base_dir = './results'
 
 
 def get_cosmo_BOSS():
-    cosmo_kwargs = dict(Omega_m=0.31,omega_b=0.022,h=0.676,sigma8=0.8,n_s=0.97,N_ur=2.0328,m_ncdm=[0.06])
+    #cosmo_kwargs = dict(Omega_m=0.31,omega_b=0.022,h=0.676,sigma8=0.8,n_s=0.97,N_ur=2.0328,m_ncdm=[0.06])
+    cosmo_kwargs = dict(Omega_m=0.31,omega_b=0.022,h=0.676,sigma8=0.8,n_s=0.97)
     cosmo = Cosmology(**cosmo_kwargs,engine='class')
     return cosmo
 
@@ -184,10 +185,10 @@ def minimize(likelihood):
 
 
 def sample(likelihood, nsteps=2000, path_samples=None):
-    import zeus
+    import emcee
     ndim = len(likelihood.varied)
     nwalkers = 2*ndim
-    sampler = zeus.EnsembleSampler(nwalkers,ndim,likelihood.logposterior)
+    sampler = emcee.EnsembleSampler(nwalkers,ndim,likelihood.logposterior)
     start = [likelihood.start(seed=seed) for seed in range(nwalkers)]
     sampler.run_mcmc(start,nsteps)
     samples = sampler.get_chain(flat=True)
@@ -232,8 +233,8 @@ if __name__ == '__main__':
 
     environment.mkdir(base_dir)
 
-    data = 'eBOSS'
-    #data = 'sims'
+    #data = 'eBOSS'
+    data = 'sims'
     tracer = 'LRGpCMASS'
     recon = False
     iso = True

@@ -171,11 +171,11 @@ if __name__ == '__main__':
     setup_logging()
     environment.mkdir(base_dir)
     tracer = 'LRGpCMASS'
-    run = ['estimator','average','plot']
+    run = ['estimator','average','plot'][2:]
     space = 'correlation'
     #space = 'power'
-    #recon = False
-    recon = True
+    recon = False
+    #recon = True
 
     if 'estimator' in run:
         path_results = []
@@ -206,6 +206,7 @@ if __name__ == '__main__':
     path_figure = os.path.join(base_dir,'eBOSS_{}_{}-vDR16.png'.format(tracer,space))
     if 'plot' in run:
         if space == 'correlation':
-            plot_correlation_function([path_result,path_ref],labels=labels,linestyles=linestyles,path_figure=path_figure)
+            #plot_correlation_function([path_result,path_ref],labels=labels,linestyles=linestyles,path_figure=path_figure)
+            plot_correlation_function(path_result,path_figure=path_figure)
         if space == 'power':
             plot_power_spectrum([path_result,path_ref],labels=labels,linestyles=linestyles,path_figure=path_figure)
