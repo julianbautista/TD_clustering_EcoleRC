@@ -64,7 +64,7 @@ def plot_correlation_function(path_results, labels=None, linestyles='-', path_fi
                 label_ = '{} {}'.format(label, label_)
             ax.plot(data.x, data.x**2 * data.y[ill], label=label_, linestyle=linestyle, color='C{:d}'.format(ill))
 
-    ax.legend(loc=1,fontsize=15)
+    ax.legend(loc=1, fontsize=15)
     ax.tick_params(labelsize=14)
     ax.grid(True)
     ax.set_xlabel('$s$ [$\\mathrm{Mpc} / h$]', fontsize=17)
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
     environment.mkdir(base_dir)
     tracer = 'LRGpCMASS'
-    run = ['estimator', 'average', 'plot']
+    run = ['estimator', 'average', 'plot'][2:]
     space = 'correlation'
     #space = 'power'
     recon = False

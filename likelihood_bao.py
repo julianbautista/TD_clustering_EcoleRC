@@ -77,7 +77,7 @@ class BaseBAOLikelihood(BaseLikelihood):
     def set_data_covariance(self, path_data, xlim=None):
         data = Measurement.load(path_data)
         self.zeff = data.attrs['zeff']
-        self.recon = data.attrs.get('recon',False)
+        self.recon = data.attrs.get('recon', False)
         self.ells = (0,) if self.iso else (0, 2)
         self.xdata, self.data, self._mask = [], [], []
         for ill,ell in enumerate(self.ells):
