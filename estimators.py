@@ -85,7 +85,7 @@ def estimate_power_spectrum(path_data, path_randoms, path_result, path_shifted=N
     power = CatalogFFTPower(data_positions1=data_positions, data_weights1=data_weights,
                             randoms_positions1=randoms_positions, randoms_weights1=randoms_weights,
                             shifted_positions1=shifted_positions, shifted_weights1=shifted_weights,
-                            boxsize=5000., nmesh=256, interlacing=3,
+                            boxsize=5000., nmesh=256, resampler='tsc', interlacing=3,
                             edges={'step': 0.005}, ells=(0, 2, 4), position_type='rdd', dtype='f8', mpiroot=0).poles
     power.save(path_result)
 

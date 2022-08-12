@@ -21,15 +21,20 @@ cd TD_clustering
 python tests.py
 ```
 
-## Cosmological constraints with BAO
+## Y1: Hands on eBOSS LRG (plus BOSS CMASS) sample
 
-See bao_inverse_distance_ladder.ipynb
+See eBOSS_LRGpCMASS.ipynb
 
-## Hands on eBOSS LRG data
+## Y2: Cosmological constraints with BAO
+
+See bao_cosmo.ipynb
+
+## Answers
+
+See answers/
 
 ### Downloads (eBOSS catalogs and measurements)
 ```
 pip install requests  # to download catalogs
 python environment.py
 ```
-See eBOSS_LRGpCMASS.ipynb
