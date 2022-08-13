@@ -176,7 +176,7 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
 
     zeff = effective_redshift[tracer]
 
-    ells = [0, 2] if recon else [0, 2, 4]
+    ells = (0, 2) if recon else (0, 2, 4)
     m = Measurement(x, y, cov=cov, attrs={'space': space, 'tracer': tracer, 'zeff': zeff, 'recon': recon, 'ells': ells})
     m.save(path_measurement(space=space, tracer=tracer, recon=recon, base_dir=base_dir))
 
