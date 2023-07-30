@@ -20,7 +20,6 @@ base_dir = './results'
 
 def read_catalog(path, zcuts=None, downsample=2.):
     cosmo = BOSS(engine='class')
-    P0 = 1e4
     catalog = Table.read(path)
     if downsample < 1.:
         rng = np.random.RandomState(seed=42)
@@ -29,7 +28,8 @@ def read_catalog(path, zcuts=None, downsample=2.):
     if zcuts is not None:
         catalog = catalog[(catalog['Z'] > zcuts[0]) & (catalog['Z'] < zcuts[1])]
     positions = [catalog['RA'], catalog['DEC'], cosmo.comoving_radial_distance(catalog['Z'])]
-    wfkp = 1. / (1. + catalog['NZ'] * P0)
+    #P0 = 1e4
+    #wfkp = 1. / (1. + catalog['NZ'] * P0)
     weights = catalog['WEIGHT_SYSTOT'] * catalog['WEIGHT_CP'] * catalog['WEIGHT_NOZ'] * catalog['WEIGHT_FKP']
     return positions, weights
 
@@ -103,7 +103,7 @@ def plot_power_spectrum(path_results, labels=None, linestyles='-', path_figure=N
         for ill, ell in enumerate(data.attrs['ells']):
             label_ = '$\ell = {:d}$'.format(ell)
             if ill == 0 and label is not None:
-                label_ = '{} {}'.format(label,label_)
+                label_ = '{} {}'.format(label, label_)
             ax.plot(data.x, data.x * data.y[ill], label=label_, linestyle=linestyle, color='C{:d}'.format(ill))
 
     ax.legend(loc=1, fontsize=15)
@@ -127,14 +127,14 @@ def average_correlation_function(path_results, effective_area, path_average, cov
         y += xi * area
     x /= sum(effective_area)
     y /= sum(effective_area)
-    m = Measurement(x, y, cov=cov, attrs={**attrs, **{'space':'correlation', 'ells':ells}})
+    m = Measurement(x, y, cov=cov, attrs={**attrs, **{'space': 'correlation', 'ells': ells}})
     m.save(path_average)
 
 
 def average_power_spectrum(path_results, effective_area, path_average, cov=None, attrs=None):
     attrs = attrs or {}
     y = 0
-    for path_result,area in zip(path_results, effective_area):
+    for path_result, area in zip(path_results, effective_area):
         power = PowerSpectrumStatistics.load(path_result)
         ells = power.ells
         x, pk = power(return_k=True, complex=False)
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     path_ref = environment.path_measurement(space=space, tracer=tracer, recon=recon)
     linestyles = ['-', ':']
     labels = [None, 'ref']
-    path_figure = os.path.join(base_dir,'eBOSS_{}_{}-vDR16.png'.format(tracer, space))
+    path_figure = os.path.join(base_dir, 'eBOSS_{}_{}-vDR16.png'.format(tracer, space))
     if 'plot' in run:
         if space == 'correlation':
             #path_ref = environment.path_measurement(space=space, tracer=tracer, recon=False, base_dir=base_dir)

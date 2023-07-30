@@ -1,17 +1,31 @@
-# Repo for exercises at Euclid summer school
+# Repo for exercises given at the Euclid summer school
+
+Everything (including installation of packages and data) should be included in the notebooks.
+These can be run within Google Colab.
+For this, go to https://colab.research.google.com/ and click on "import" to import the notebooks.
+
+## Y1: Hands on eBOSS LRG (plus BOSS CMASS) sample
+
+See eBOSS_LRGpCMASS.ipynb
+
+## Y2: Cosmological constraints with BAO
+
+See cosmo_bao.ipynb
+
+## Answers
+
+See answers/
 
 ## Installation
 ```
-pip install matplotlib jupyter cython mpi4py
+python -m pip install matplotlib cython mpi4py fitsio
 python -m pip install git+https://github.com/cosmodesi/cosmoprimo#egg=cosmoprimo[class,astropy]
-python -m pip install git+https://github.com/cosmodesi/pycorr#egg=pycorr[corrfunc]
-python -m pip install git+https://github.com/adematti/pmesh
-python -m pip install git+https://github.com/cosmodesi/pypower
+USE_GPU=0 python -m pip install git+https://github.com/cosmodesi/pycorr#egg=pycorr[corrfunc]
+python -m pip install git+https://github.com/cosmodesi/pypower#egg=pypower[extras]
 ```
 Optionally:
 ```
-pip install emcee
-pip install corner
+python -m pip install emcee corner
 ```
 
 Quick tests:
@@ -21,19 +35,16 @@ cd TD_clustering
 python tests.py
 ```
 
-## Y1: Hands on eBOSS LRG (plus BOSS CMASS) sample
-
-See eBOSS_LRGpCMASS.ipynb
-
-## Y2: Cosmological constraints with BAO
-
-See bao_cosmo.ipynb
-
-## Answers
-
-See answers/
-
 ### Downloads (eBOSS catalogs and measurements)
+
+#### Lite versions
+```
+pip install gdown
+gdown --no-check-certificate --folder https://drive.google.com/drive/folders/1lN0xu7mWuu46POSaJ1t5tKCmtxOETfXh?usp=sharing
+gdown --no-check-certificate --folder https://drive.google.com/drive/folders/1egpLxKnteOQgYIetNDk7TFmk-vDx_O11?usp=sharing
+```
+
+#### Full versions
 ```
 pip install requests  # to download catalogs
 python environment.py

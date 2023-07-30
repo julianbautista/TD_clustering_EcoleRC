@@ -3,17 +3,18 @@ import requests
 
 import numpy as np
 
-data_dir = './data'
-catalog_dir = './catalogs/lite'
-origin_catalog_dir = './catalogs/origin'
+dirname = os.path.dirname(__file__)
+data_dir = os.path.join(dirname, 'data')
+catalog_dir = os.path.join(dirname, 'catalogs', 'lite')
+origin_catalog_dir = os.path.join(dirname, 'catalogs', 'origin')
 
-caps = ['NGC','SGC']
+regions = ['NGC', 'SGC']
 effective_area = {}
-effective_area['LRG'] = [2476., 1627.] # for NGC, SGC
-effective_area['LRGpCMASS'] = [272226., 129825.] # actually number of objects
+effective_area['LRG'] = [2476., 1627.]  # for NGC, SGC
+effective_area['LRGpCMASS'] = [272226., 129825.]  # actually number of objects
 effective_redshift = {}
 effective_redshift['LRGpCMASS'] = 0.698
-zcuts = {'LRGpCMASS':(0.6, 1.0)}
+zcuts = {'LRGpCMASS': (0.6, 1.0)}
 
 
 class Measurement(object):
@@ -56,8 +57,8 @@ class Measurement(object):
 
 
 def mkdir(path):
-	try: os.makedirs(path) #MPI...
-	except OSError: return
+    try: os.makedirs(path)  # MPI...
+    except OSError: return
 
 
 def load_ref_data(path_data):
@@ -143,8 +144,8 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
             base_covariance = ['Covariance_LRGxi_NGCSGC_0.6z1.0_{}.txt'.format(label_recon)]
         else:
             url = 'https://svn.sdss.org/public/data/eboss/DR16cosmo/tags/v1_0_1/dataveccov/lrg_elg_qso/LRG_Pk/'
-            base_data = ['Data_LRGPk_{}_0.6z1.0_{}.txt'.format(cap,label_recon) for cap in ['NGC','SGC']]
-            base_covariance = ['Covariance_LRGPk_{}_0.6z1.0_{}.txt'.format(cap,label_recon) for cap in ['NGC','SGC']]
+            base_data = ['Data_LRGPk_{}_0.6z1.0_{}.txt'.format(region, label_recon) for region in ['NGC', 'SGC']]
+            base_covariance = ['Covariance_LRGPk_{}_0.6z1.0_{}.txt'.format(region, label_recon) for region in ['NGC', 'SGC']]
 
     path_ref_data = [os.path.join(base_dir, bd) for bd in base_data]
     path_ref_covariance = [os.path.join(base_dir, bd) for bd in base_covariance]
@@ -154,7 +155,7 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
     for bd, prd in zip(base_data + base_covariance, path_ref_data + path_ref_covariance):
         urld = os.path.join(url, bd)
         r = requests.get(urld, allow_redirects=True)
-        with open(prd,'bw') as file: file.write(r.content)
+        with open(prd, 'bw') as file: file.write(r.content)
 
     coeffs = effective_area[tracer]
     coeffs = np.array(coeffs) / np.sum(coeffs)
@@ -181,38 +182,38 @@ def download_measurement(space='power', tracer='LRGpCMASS', recon=False, base_di
     m.save(path_measurement(space=space, tracer=tracer, recon=recon, base_dir=base_dir))
 
 
-def path_measurement(space='power', tracer='LRGpCMASS', cap=None, recon=False, base_dir=data_dir):
+def path_measurement(space='power', tracer='LRGpCMASS', region=None, recon=False, base_dir=data_dir):
     if recon: recon = '_rec'
     else: recon = ''
-    if cap is None: cap = ''
-    else: cap = '_{}'.format(cap)
-    base = '{}_eBOSS_{}{}{}.npy'.format(space, tracer, cap, recon)
+    if region is None: region = ''
+    else: region = '_{}'.format(region)
+    base = '{}_eBOSS_{}{}{}.npy'.format(space, tracer, region, recon)
     return os.path.join(base_dir, base)
 
 
-def download_catalogs(tracer='LRGpCMASS', cap='NGC', recon=False, base_dir=origin_catalog_dir):
-    url_dir = 'https://data.sdss.org/sas/dr16/eboss/lss/catalogs/DR16/'
-    url_data, url_randoms = path_catalogs(tracer=tracer, cap=cap, recon=recon, base_dir=url_dir)
-    base_data, base_randoms = path_catalogs(tracer=tracer, cap=cap, recon=recon, base_dir=base_dir)
-
+def download_catalogs(tracer='LRGpCMASS', region='NGC', recon=False, base_dir=origin_catalog_dir):
     mkdir(base_dir)
+    url_dir = 'https://data.sdss.org/sas/dr16/eboss/lss/catalogs/DR16/'
+    url_data, url_randoms = path_catalogs(tracer=tracer, region=region, recon=recon, lite=False, base_dir=url_dir)
+    base_data, base_randoms = path_catalogs(tracer=tracer, region=region, recon=recon, lite=False, base_dir=base_dir)
     for urld, fn in zip([url_data, url_randoms], [base_data, base_randoms]):
         r = requests.get(urld, allow_redirects=True)
         with open(fn, 'bw') as file: file.write(r.content)
 
 
-def path_catalogs(tracer='LRGpCMASS', cap='NGC', recon=False, suffix='lite', base_dir=catalog_dir):
+def path_catalogs(tracer='LRGpCMASS', region='NGC', recon=False, lite=True, base_dir=catalog_dir):
     if recon: recon = '_rec'
     else: recon = ''
-    if suffix: suffix = '_' + suffix
-    base_data = 'eBOSS_{}_clustering_data{}-{}-vDR16{}.fits'.format(tracer, recon, cap, suffix)
-    base_randoms = 'eBOSS_{}_clustering_random{}-{}-vDR16{}.fits'.format(tracer, recon, cap, suffix)
+    if lite: suffix = '_lite'
+    else: suffix = ''
+    base_data = 'eBOSS_{}_clustering_data{}-{}-vDR16{}.fits'.format(tracer, recon, region, suffix)
+    base_randoms = 'eBOSS_{}_clustering_random{}-{}-vDR16{}.fits'.format(tracer, recon, region, suffix)
     return os.path.join(base_dir, base_data), os.path.join(base_dir, base_randoms)
 
 
-def prune_catalogs(tracer='LRGpCMASS', cap='NGC', recon=False):
-    path_origin_data, path_origin_randoms = path_catalogs(tracer=tracer, cap=cap, recon=recon, suffix='', base_dir=origin_catalog_dir)
-    path_data, path_randoms = path_catalogs(tracer=tracer, cap=cap, recon=recon, suffix='lite', base_dir=catalog_dir)
+def prune_catalogs(tracer='LRGpCMASS', region='NGC', recon=False):
+    path_origin_data, path_origin_randoms = path_catalogs(tracer=tracer, region=region, recon=recon, lite=False, base_dir=origin_catalog_dir)
+    path_data, path_randoms = path_catalogs(tracer=tracer, region=region, recon=recon, lite=True, base_dir=catalog_dir)
     from astropy.table import Table
     catalog = Table.read(path_origin_data)
     catalog.remove_columns(['LRG_ID', 'SECTOR', 'WEIGHT_FKP_EBOSS', 'WEIGHT_ALL_NOFKP', 'IN_EBOSS_FOOT', 'ISCMASS', 'WEIGHT_FKP_CMASS'])
@@ -230,7 +231,7 @@ def prune_catalogs(tracer='LRGpCMASS', cap='NGC', recon=False):
     catalog.write(path_randoms, overwrite=True)
 
 
-def path_sim_measurement(space='power', tracer='LRGpCMASS', z=0.5, recon=False, base_dir='./sims/'):
+def path_sim_measurement(space='power', tracer='LRGpCMASS', z=0.5, recon=False, base_dir=os.path.join(dirname, 'sims')):
     if recon: recon = '_rec'
     else: recon = ''
     base = '{}_sim_{}{}_{:.2f}.npy'.format(space, tracer, recon, z)
@@ -246,9 +247,8 @@ if __name__ == '__main__':
 
     tracer = 'LRGpCMASS'
     for recon in [False, True]:
-        for cap in ['NGC', 'SGC']:
-            download_catalogs(tracer=tracer, cap=cap, recon=recon, base_dir=origin_catalog_dir)
-        for cap in ['NGC', 'SGC']:
-            prune_catalogs(tracer=tracer, cap=cap, recon=recon)
+        for region in ['NGC', 'SGC']:
+            download_catalogs(tracer=tracer, region=region, recon=recon, base_dir=origin_catalog_dir)
+            prune_catalogs(tracer=tracer, region=region, recon=recon)
         for space in ['power', 'correlation']:
             download_measurement(space=space, tracer=tracer, recon=recon)
