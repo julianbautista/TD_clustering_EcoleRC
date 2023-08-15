@@ -30,6 +30,7 @@ def test_pycorr():
                                          randoms_positions1=randoms_positions1, randoms_weights1=randoms_weights1,
                                          engine='corrfunc', nthreads=2)
 
+
 def test_pypower():
     data_positions1, data_weights1 = generate_catalogs(size=10000, seed=42)
     randoms_positions1, randoms_weights1 = generate_catalogs(size=50000, seed=43)
