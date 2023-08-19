@@ -6,7 +6,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from cosmoprimo.fiducial import BOSS
-from cosmoprimo import Cosmology, PowerSpectrumBAOFilter
+from cosmoprimo import PowerSpectrumBAOFilter
 from pycorr import setup_logging
 
 from model_bao import PowerBAOModel, AnisotropicScaling, TrapzMultipoleIntegration
@@ -45,7 +45,7 @@ class BaseLikelihood(object):
         return self.loglkl(args) + logprior
 
     def logprior(self, args):
-        for b,v in zip(self.params['bounds'], args):
+        for b, v in zip(self.params['bounds'], args):
             if not (b[0] <= v <= b[1]):
                 return -np.inf
         return 0.
@@ -69,7 +69,7 @@ class BaseLikelihood(object):
 
 class BaseBAOLikelihood(BaseLikelihood):
 
-    def __init__(self, path_data, xlim=(0.02,0.3), iso=False):
+    def __init__(self, path_data, xlim=(0.02, 0.3), iso=False):
         self.iso = iso
         self.set_data_covariance(path_data, xlim=xlim)
         self.set_model()
@@ -80,12 +80,12 @@ class BaseBAOLikelihood(BaseLikelihood):
         self.recon = data.attrs.get('recon', False)
         self.ells = (0,) if self.iso else (0, 2)
         self.xdata, self.data, self._mask = [], [], []
-        for ill,ell in enumerate(self.ells):
+        for ill, ell in enumerate(self.ells):
             mask = (data.x > xlim[0]) & (data.x < xlim[-1])
             self.xdata.append(data.x[mask])
             self.data.append(data.y[ill, mask])
             self._mask.append(mask)
-        self.xdata = self.xdata[0] # same x for all ells, just to simplify
+        self.xdata = self.xdata[0]  # same x for all ells, just to simplify
         self.data = np.array(self.data)
 
         mask = np.concatenate(self._mask)
@@ -93,7 +93,7 @@ class BaseBAOLikelihood(BaseLikelihood):
         self.invcov = np.linalg.inv(self.cov)
         assert np.allclose(self.cov.dot(self.invcov), np.eye(*self.cov.shape))
         self.stddev = np.diag(self.cov)**0.5
-        self.stddev = np.array([self.stddev[ill * len(self.xdata):(ill+1) * len(self.xdata)] for ill, ell in enumerate(self.ells)])
+        self.stddev = np.array([self.stddev[ill * len(self.xdata):(ill + 1) * len(self.xdata)] for ill, ell in enumerate(self.ells)])
 
 
 class PowerBAOLikelihood(BaseBAOLikelihood):
@@ -120,7 +120,7 @@ class PowerBAOLikelihood(BaseBAOLikelihood):
                 pk = model.pk_galaxy_iso(k, **params)
                 bb = [par for par in params if re.match(template_bb, par)]
                 pk += PowerBAOModel.polynomial(k, **{par: params[par] * 1e3 for par in bb})
-                return pk[None,:]
+                return pk[None, :]
 
         else:
             bb = ['m1', 'p0', 'p1']
@@ -142,10 +142,10 @@ class PowerBAOLikelihood(BaseBAOLikelihood):
                 if k is None: k = self.xdata
                 pk = pk_mu(k, integration.mu, **params)
                 pk = integration(pk)
-                for ill,ell in enumerate(self.ells):
+                for ill, ell in enumerate(self.ells):
                     old = [par for par in params if re.match(template_bb[ell], par)]
                     new = [par.replace('_l{:d}'.format(ell), '') for par in old]
-                    nparams = {npar: params[opar] * 1e3 for opar,npar in zip(old, new)}
+                    nparams = {npar: params[opar] * 1e3 for opar, npar in zip(old, new)}
                     pk[ill] += PowerBAOModel.polynomial(k, **nparams)
                 return pk
 
@@ -273,9 +273,9 @@ if __name__ == '__main__':
     if data == 'eBOSS':
         path_data = environment.path_measurement(space=space, tracer=tracer, recon=recon)
         #path_data = estimators.path_measurement(space=space, tracer=tracer, recon=recon)
-        path_figure = os.path.join(base_dir,'fit_bao_{}_{}_{}_{}.png'.format(data, tracer, space, siso))
-        path_samples = os.path.join(base_dir,'samples_bao_{}_{}_{}_{}.npy'.format(data, tracer, space, siso))
-        path_figure_samples = os.path.join(base_dir,'samples_{}_{}_bao_{}_{}.png'.format(data, tracer, space, siso))
+        path_figure = os.path.join(base_dir, 'fit_bao_{}_{}_{}_{}.png'.format(data, tracer, space, siso))
+        path_samples = os.path.join(base_dir, 'samples_bao_{}_{}_{}_{}.npy'.format(data, tracer, space, siso))
+        path_figure_samples = os.path.join(base_dir, 'samples_{}_{}_bao_{}_{}.png'.format(data, tracer, space, siso))
         likelihood = PowerBAOLikelihood(path_data, xlim=xlim, iso=iso)
         run_pipeline(path_measurement(tracer=tracer, iso=iso))
 

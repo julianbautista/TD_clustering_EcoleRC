@@ -21,7 +21,7 @@ logger = logging.getLogger('PowerBAOLikelihood')
 class BAOLikelihood(BaseLikelihood):
 
     def __init__(self, path_data):
-        if isinstance(path_data,str):
+        if isinstance(path_data, str):
             path_data = [path_data]
         self.set_data_covariance(path_data)
         self.set_model()
@@ -96,7 +96,7 @@ class BAOLikelihood(BaseLikelihood):
             if iso:
                 ax.errorbar(z, d, c[0]**0.5, linestyle='none', color='C{:d}'.format(iq))
             else:
-                ax.errorbar([z]*2, d, np.diag(c)**0.5, linestyle='none', color='C{:d}'.format(iq))
+                ax.errorbar([z] * 2, d, np.diag(c)**0.5, linestyle='none', color='C{:d}'.format(iq))
         ax.legend(loc=1, fontsize=15)
         ax.tick_params(labelsize=14)
         ax.grid(True)

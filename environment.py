@@ -84,12 +84,12 @@ def load_ref_covariance(path_covariance):
         line = [word for word in line if word]
         norecon = len(line) < 7
         if norecon:
-            for word,col in zip(line, ['ell1', 'ell2', 'x1', 'x2', 'm']):
+            for word, col in zip(line, ['ell1', 'ell2', 'x1', 'x2', 'm']):
                 toret[col].append(converters[col](word))
             toret['recon1'].append(0)
             toret['recon2'].append(0)
         else:
-            for word,col in zip(line, cols):
+            for word, col in zip(line, cols):
                 toret[col].append(converters[col](word))
 
     for col in cols: toret[col] = np.array(toret[col])
@@ -120,7 +120,7 @@ def load_ref_covariance(path_covariance):
                 for x in xcov[recon][ell]:
                     conv[recon][ell][x] = nx
                     nx += 1
-        for im,m in enumerate(toret['m']):
+        for im, m in enumerate(toret['m']):
             ibin1 = conv[toret['recon1'][im]][toret['ell1'][im]][toret['x1'][im]]
             ibin2 = conv[toret['recon2'][im]][toret['ell2'][im]][toret['x2'][im]]
             toretm[ibin1][ibin2] = toret['m'][im]

@@ -4,8 +4,8 @@ import numpy as np
 class PowerBAOModel(object):
 
     def __init__(self, pklin, pksmooth):
-      self.pklin_interp = pklin
-      self.pksmooth_interp = pksmooth
+        self.pklin_interp = pklin
+        self.pksmooth_interp = pksmooth
 
     def wiggles_smooth(self, k):
         return self.pklin_interp(k) / self.pksmooth_interp(k)
@@ -30,7 +30,7 @@ class PowerBAOModel(object):
 
     def pk_galaxy_iso(self, kobs, qiso=1., sigmanl=0., decoupled=True, **kwargs):
         k = kobs if decoupled else kobs / qiso
-        Psm = self.pk_smooth_iso(k,**kwargs)
+        Psm = self.pk_smooth_iso(k, **kwargs)
         return Psm * self.wiggles_damped_iso(kobs / qiso, sigmanl=sigmanl)
 
     def pk_smooth_aniso(self, k, mu, b=1., beta=0., sigmapar=0., sigmaper=0., sigmas=0., sigmasm=0., recon=False, kobs=None, decoupled=False, **kwargs):
@@ -44,7 +44,6 @@ class PowerBAOModel(object):
     def pk_galaxy_aniso(self, k, mu, sigmapar=0., sigmaper=0., **kwargs):
         Psm = self.pk_smooth_aniso(k, mu, sigmapar=sigmapar, sigmaper=sigmaper, **kwargs)
         return Psm * self.wiggles_damped_aniso(k, mu, sigmapar=sigmapar, sigmaper=sigmaper)
-
 
 
 def enforce_shape(x, y, grid=True):
@@ -122,7 +121,7 @@ class BaseMultipoleIntegration(object):
 
     """Base class to perform integration over Legendre polynomials."""
 
-    def __init__(self, mu=100, ells=(0,2,4), sym=False):
+    def __init__(self, mu=100, ells=(0, 2, 4), sym=False):
         r"""
         Initialize :class:`BaseMultipoleIntegration`.
 
