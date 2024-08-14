@@ -27,7 +27,7 @@ The notebook will open, click "Copy to Drive" (to be able to make changes).
 
 ## Answers
 
-See answers/
+See answers/.
 
 ## Installation
 ```
@@ -38,7 +38,7 @@ python -m pip install git+https://github.com/cosmodesi/pypower#egg=pypower[extra
 ```
 Optionally:
 ```
-python -m pip install emcee corner
+python -m pip install emcee corner numba
 ```
 
 Quick tests:
