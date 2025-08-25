@@ -22,7 +22,7 @@ See cosmo_bao.ipynb.
 ### Google Colab
 
 Go to https://colab.research.google.com/.
-Click on "import" (then "GitHub") and paste https://github.com/adematti/TD_clustering/blob/main/cosmo_bao.ipynb, then click on the lens on the right.
+Click on "import" (then "GitHub") and paste https://github.com/julianbautista/TD_clustering_EcoleRC/tree/main, then click on the lens on the right.
 The notebook will open, click "Copy to Drive" (to be able to make changes).
 
 ## Answers
